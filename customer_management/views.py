@@ -64,7 +64,7 @@ class LeadCreateView(LoginRequiredMixin, generic.CreateView):
         return reverse("home")
 
 
-class LeadUpdateView(LoginRequiredMixin,generic.UpdateView):
+class LeadUpdateView(LoginRequiredMixin, generic.UpdateView):
     template_name = "lead_update.html"
     queryset = Lead.objects.all()
     form_class = LeadModelForm
@@ -78,7 +78,7 @@ class LeadUpdateView(LoginRequiredMixin,generic.UpdateView):
         return reverse("lead_list")
 
 
-class LeadDeleteView(LoginRequiredMixin,generic.DeleteView):
+class LeadDeleteView(LoginRequiredMixin, generic.DeleteView):
     template_name = "lead_delete.html"
     queryset = Lead.objects.all()
 
@@ -99,10 +99,20 @@ class SignUpView(generic.CreateView):
         return reverse("login")
 
 
+class AgentListView(LoginRequiredMixin, generic.ListView):
+    template_name = "agent_list.html"
+    queryset = Agent.objects.all()
+    context_object_name = "agents"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Agent List"
+        return context
+
+
 def logout_view(request):
     logout(request)
     return redirect("login")
-
 
 
 # def lead_list(request):

@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "customer_management.apps.CustomerManagementConfig",
-    "agents.apps.AgentsConfig",
     'widget_tweaks',
 ]
 
