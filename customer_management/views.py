@@ -103,7 +103,9 @@ def logout_view(request):
     logout(request)
     return redirect("login")
 
-
+"""
+There is under function based created views
+"""
 
 # def lead_list(request):
 #     leads = Lead.objects.all()
