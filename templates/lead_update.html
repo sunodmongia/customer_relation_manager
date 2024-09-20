@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load widget_tweaks %}
+{% load static %}
 {% block content %}
 <section class="text-gray-600 body-font overflow-hidden">
     <div class="container px-5 py-24 mx-auto">
@@ -54,7 +55,7 @@
                 </form>
             </div>
             <img alt="ecommerce" class="rounded-full h-200 h-64 object-cover object-center rounded"
-                src="https://dummyimage.com/200x200">
+                src="{% static 'profile/default_2.jpg' %}">
         </div>
     </div>
 </section>

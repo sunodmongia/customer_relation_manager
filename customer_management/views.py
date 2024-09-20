@@ -1,6 +1,7 @@
 from django.core.mail import send_mail
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import logout
+from django.db.models.query import QuerySet
 from django.forms import BaseModelForm
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, reverse
@@ -55,8 +56,11 @@ class LeadCreateView(LoginRequiredMixin, generic.CreateView):
 
     def form_valid(self, form):
         send_mail(
-            subject="New Lead",
-            message=f"Lead created successfully for {form.cleaned_data['first_name']} {form.cleaned_data['last_name']}",
+            subject="New Lead created",
+            message=(
+                f"Respected sir, "
+                f"Lead created successfully for {form.cleaned_data['first_name']} {form.cleaned_data['last_name']}"
+            ),
             from_email=os.environ.get("WIRE_APP_EMAIL_USER"),
             recipient_list=[os.environ.get("WIRE_APP_EMAIL_USER")],
         )
@@ -121,6 +125,15 @@ class AgentCreateView(LoginRequiredMixin, generic.CreateView):
     template_name = "register_agent.html"
     form_class = AgentModelForm
 
+    def form_valid(self, form):
+        send_mail(
+            subject="New Agent",
+            message=f"Agent created successfully for {form.cleaned_data['user']} {form.cleaned_data['organisation']}",
+            from_email=os.environ.get("WIRE_APP_EMAIL_USER"),
+            recipient_list=[os.environ.get("WIRE_APP_EMAIL_USER")],
+        )
+        return super(LeadCreateView, self).form_valid(form)
+
     def get_success_url(self):
         return reverse("agent_list")
 
@@ -134,6 +147,41 @@ class AgentCreateView(LoginRequiredMixin, generic.CreateView):
         context = super().get_context_data(**kwargs)
         context["title"] = "Agent Create"
         return context
+
+
+class AgentDetailView(LoginRequiredMixin, generic.DetailView):
+    template_name = "agent_detail.html"
+    Agent.objects.all()
+
+    def get_queryset(self):
+        return Agent.objects.all()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = f"Details for {self.object}"
+        return context
+
+
+class AgentUpdateView(LoginRequiredMixin, generic.UpdateView):
+    template_name = "agent_update.html"
+    queryset = Agent.objects.all()
+    form_class = AgentModelForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = f"Update for {self.object}"
+        return context
+
+    def get_success_url(self):
+        return reverse("agent_detail", kwargs={"pk": self.object.pk})
+
+
+class AgentDeleteView(LoginRequiredMixin, generic.DeleteView):
+    template_name = "agent_delete.html"
+    queryset = Agent.objects.all()
+
+    def get_success_url(self):
+        return reverse("agent_list")
 
 
 # def lead_list(request):
