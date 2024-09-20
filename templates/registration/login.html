@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+<div class="font-sans text-gray-900 antialiased">
+    <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-[#ffffff]">
+        <div>
+            <a href="/" class="hover:no-underline">
+                <h2 class="font-bold text-3xl hover:text-[#f84525]">WiRE <span class="bg-[#f84525] text-white px-2 rounded-md hover:bg-[#000000]">CRM</span>
+                </h2>
+            </a>
+        </div>
+
+        <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
+            <form method="POST" action="">
+                {% csrf_token %}
+                <div class="py-8">
+                    <center>
+                        <span class="text-2xl font-semibold">Log In</span>
+                    </center>
+                </div>
+
+                <div>
+                    {% render_field form.username type='text' name='text' placeholder='username' class+="w-full rounded-md py-2.5 px-4 border text-sm outline-gray-800" %}
+                </div>
+
+                <div class="mt-4">
+                    <div class="relative">
+                        {% render_field form.password type='password' name='password' placeholder='password' class+="w-full rounded-md py-2.5 px-4 border text-sm outline-gray-800" %}
+                    </div>
+                </div>
+                <div class="flex items-center justify-end mt-4">
+                    <a href="#"
+                        class="hover:underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Forgot your password?
+                    </a>
+
+                    <button
+                        class='ms-4 inline-flex items-center px-4 py-2 bg-[#000000] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150'>
+                        Sign In
+                    </button>
+
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    const passwordInput = document.getElementById('password');
+    const togglePasswordButton = document.getElementById('togglePassword');
+
+    togglePasswordButton.addEventListener('click', () => {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+    });
+</script>
+
+{% endblock %}

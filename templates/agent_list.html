@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1 class="font-bold">
+    Agent List
+</h1>
+    {% for agent in agents %}
+        {{ agent.user.username }}
+    {% endfor %}
+
+{% endblock %}
