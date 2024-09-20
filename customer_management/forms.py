@@ -9,14 +9,15 @@ User = get_user_model()
 class UserRegistrationForm(UserCreationForm):
     class Meta:
         model = User
-        fields = [
+        fields = (
             "first_name",
             "last_name",
+            "username",
             "email",
             "username",
-        ]
+        )
+        
 
-    field_classes = {"username": UsernameField}
 
 
 class LeadModelForm(forms.ModelForm):
@@ -33,4 +34,4 @@ class LeadModelForm(forms.ModelForm):
 class AgentModelForm(forms.ModelForm):
     class Meta:
         model = Agent
-        fields = ("user",)
+        fields = ("user", "organisation")

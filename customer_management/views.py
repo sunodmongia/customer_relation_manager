@@ -125,9 +125,9 @@ class AgentCreateView(LoginRequiredMixin, generic.CreateView):
         return reverse("agent_list")
 
     def form_valid(self, form):
-        agent = form.save(commit=False)
-        agent.organisation = self.request.user.userprofile
-        agent.save()
+        agent = form.save()
+        # agent.organisation = self.request.user.userprofile
+        # agent.save()
         return super(AgentCreateView, self).form_valid(form)
 
     def get_context_data(self, **kwargs):
