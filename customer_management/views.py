@@ -184,6 +184,12 @@ class AgentDeleteView(LoginRequiredMixin, generic.DeleteView):
         return reverse("agent_list")
 
 
+
+"""
+There is under function based created views
+"""
+
+
 # def lead_list(request):
 #     leads = Lead.objects.all()
 #     return render(request, "lead_list.html", {"": leads})

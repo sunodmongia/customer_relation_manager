@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="bg-gray-100">
+    <div class="min-h-screen flex items-center justify-center">
+        <form action="" method="POST">
+            {% csrf_token %}
+            <div class="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
+                <h1 class="text-xl font-bold mb-3">Are you Sure?</h1>
+                <p class="text-gray-600 mb-6">Once you delete this lead, there is no going back</p>
+                <div class="form-group">
+                    <button class="btn btn-danger btn-sm" type="submit">Delete</button>
+                    <a href="{% url 'agent_detail_update' agent.id %}" class="btn btn-info btn-sm">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
