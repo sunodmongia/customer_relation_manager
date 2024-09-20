@@ -1,6 +1,8 @@
 from django.core.mail import send_mail
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import logout
+from django.forms import BaseModelForm
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, reverse
 from django.contrib import messages
 from django.views import generic
@@ -99,6 +101,11 @@ class SignUpView(generic.CreateView):
         return reverse("login")
 
 
+def logout_view(request):
+    logout(request)
+    return redirect("login")
+
+
 class AgentListView(LoginRequiredMixin, generic.ListView):
     template_name = "agent_list.html"
     queryset = Agent.objects.all()
@@ -110,9 +117,23 @@ class AgentListView(LoginRequiredMixin, generic.ListView):
         return context
 
 
-def logout_view(request):
-    logout(request)
-    return redirect("login")
+class AgentCreateView(LoginRequiredMixin, generic.CreateView):
+    template_name = "register_agent.html"
+    form_class = AgentModelForm
+
+    def get_success_url(self):
+        return reverse("agent_list")
+
+    def form_valid(self, form):
+        agent = form.save(commit=False)
+        agent.organisation = self.request.user.userprofile
+        agent.save()
+        return super(AgentCreateView, self).form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Agent Create"
+        return context
 
 
 # def lead_list(request):

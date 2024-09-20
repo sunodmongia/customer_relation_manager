@@ -15,9 +15,9 @@ class UserRegistrationForm(UserCreationForm):
             "email",
             "username",
         ]
-    
 
-    field_classes ={'username': UsernameField}
+    field_classes = {"username": UsernameField}
+
 
 class LeadModelForm(forms.ModelForm):
     first_name = forms.CharField(max_length=100)
@@ -28,3 +28,9 @@ class LeadModelForm(forms.ModelForm):
     class Meta:
         model = Lead
         fields = ("first_name", "last_name", "age", "agent")
+
+
+class AgentModelForm(forms.ModelForm):
+    class Meta:
+        model = Agent
+        fields = ("user",)
