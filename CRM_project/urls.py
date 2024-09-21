@@ -16,9 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-
+from django.contrib.auth.views import (
+    PasswordResetView,
+    PasswordResetDoneView
+    )
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("customer_management.urls")),
+    path("reset-password/", PasswordResetView.as_view(), name="reset_password"),
+    path("reset-password-done/", PasswordResetDoneView.as_view(), name="reset_password_done"),
 ]

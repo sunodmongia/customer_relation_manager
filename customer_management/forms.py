@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+
 # User registration form using the built-in UserCreationForm
 class UserRegistrationForm(UserCreationForm):
     class Meta:
@@ -35,8 +36,10 @@ class LeadModelForm(forms.ModelForm):
 # Agent form to create or update agent profiles
 class AgentModelForm(forms.ModelForm):
     class Meta:
-        model = Agent
+        model = User
         fields = (
-            "user",
-            "organisation",
+            "first_name",
+            "last_name",
+            "username",
+            "email",
         )

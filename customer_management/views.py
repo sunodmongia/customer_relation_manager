@@ -11,6 +11,7 @@ from .models import *
 from .forms import *
 from .mixin import *
 import os
+import random
 from django.urls import reverse_lazy
 from django.conf import settings
 
@@ -78,7 +79,7 @@ class LeadCreateView(OrganiserLoginRequiredMixin, generic.CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["title"] = "Create Lead"
+        context["title"] = "Create a Lead"
         return context
 
     def form_valid(self, form):
@@ -90,12 +91,12 @@ class LeadCreateView(OrganiserLoginRequiredMixin, generic.CreateView):
             subject="New Lead created",
             message=f"Lead created successfully for {form.cleaned_data['first_name']} {form.cleaned_data['last_name']}",
             from_email=settings.EMAIL_HOST_USER,  # Fetch email from settings instead of os.environ
-            recipient_list=[settings.EMAIL_HOST_USER],  # Send email to the configured user
+            recipient_list=[settings.EMAIL_HOST_USER], # Send email to the configured user
         )
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy("home")  # Use reverse_lazy for URL resolution
+        return reverse_lazy("lead_list")  # Use reverse_lazy for URL resolution
 
 
 class LeadUpdateView(OrganiserLoginRequiredMixin, generic.UpdateView):
@@ -167,14 +168,28 @@ class AgentCreateView(OrganiserLoginRequiredMixin, generic.CreateView):
         return reverse("agent_list")
 
     def form_valid(self, form):
-        agent = form.save(commit=False)
-        agent.organisation = self.request.user.userprofile
-        agent.save()
+        user = form.save(commit=False)
+        user.is_agent = True
+        user.is_organiser = False
+        user.set_password(f"{random.randint(1000000, 1000000000)}")
+        user.save()
+        Agent.objects.create(
+            user=user,
+            organisation=self.request.user.userprofile
+        )
+        send_mail(
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[user.email],
+            subject="You are invited as an agent",
+            message="You were added as an agent in CRM by wire. Please login to confirm that it's you"
+        )
+        # agent.organisation = self.request.user.userprofile
+        # agent.save()
         return super(AgentCreateView, self).form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["title"] = "Agent Create"
+        context["title"] = "Create a Agent"
         return context
 
 
