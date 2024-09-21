@@ -1,11 +1,11 @@
 from django import forms
 from .models import Lead, Agent
-from django.contrib.auth.forms import UsernameField, UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, UsernameField
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
-
+# User registration form using the built-in UserCreationForm
 class UserRegistrationForm(UserCreationForm):
     class Meta:
         model = User
@@ -14,24 +14,29 @@ class UserRegistrationForm(UserCreationForm):
             "last_name",
             "username",
             "email",
-            "username",
         )
-        
+        field_classes = {
+            "username": UsernameField,
+        }
 
 
-
+# Lead form that dynamically pulls the available agents
 class LeadModelForm(forms.ModelForm):
-    first_name = forms.CharField(max_length=100)
-    last_name = forms.CharField(max_length=100)
-    age = forms.IntegerField(min_value=0)
-    # agent = forms.ModelChoiceField(queryset=Agent.objects.none())
-
     class Meta:
         model = Lead
-        fields = ("first_name", "last_name", "age", "agent")
+        fields = (
+            "first_name",
+            "last_name",
+            "age",
+            "agent",
+        )
 
 
+# Agent form to create or update agent profiles
 class AgentModelForm(forms.ModelForm):
     class Meta:
         model = Agent
-        fields = ("user", "organisation")
+        fields = (
+            "user",
+            "organisation",
+        )

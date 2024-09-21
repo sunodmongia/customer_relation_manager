@@ -1,13 +1,17 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django import forms
 
 
+# Custom User model with organiser and agent roles
 class User(AbstractUser):
-    pass
+    is_organiser = models.BooleanField(default=True)
+    is_agent = models.BooleanField(default=False)
 
 
+# A UserProfile model linked to the User model
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
@@ -15,16 +19,20 @@ class UserProfile(models.Model):
         return self.user.username
 
 
+# Lead model representing the lead details, with organisation reference
 class Lead(models.Model):
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=20)
     age = models.IntegerField(default=0)
-    agent = models.ForeignKey("Agent", on_delete=models.CASCADE)
+    # Organisation references UserProfile, must be set during creation
+    organisation = models.ForeignKey(UserProfile, null=False, blank=False, on_delete=models.CASCADE)
+    agent = models.ForeignKey("Agent", null=True, blank=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
 
+# Agent model, linking agents to a specific organisation
 class Agent(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     organisation = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
@@ -33,9 +41,8 @@ class Agent(models.Model):
         return self.user.email
 
 
+# Signal to create a UserProfile whenever a User is created
+@receiver(post_save, sender=User)
 def post_user_created_signal(sender, instance, created, **kwargs):
     if created:
-        UserProfile.objects.create(user=instance)
-
-
-post_save.connect(post_user_created_signal, sender=User)
+        UserProfile.objects.get_or_create(user=instance)  # Use get_or_create to avoid duplicates

@@ -14,10 +14,12 @@
             <!-- Home and Calendar -->
             <a href="{% url 'home' %}"
               class="hover:no-underline hover:bg-gray-700 rounded-md px-2 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Home</a>
-            <a href="{% url 'lead_list' %}"
-              class="hover:no-underline hover:bg-gray-700 rounded-md px-2 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Leads</a>
-            <a href="{% url 'agent_list' %}"
+              <a href="{% url 'lead_list' %}"
+                class="hover:no-underline hover:bg-gray-700 rounded-md px-2 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Leads</a>
+              {% if request.user.is_organiser %}
+              <a href="{% url 'agent_list' %}"
               class="hover:no-underline hover:bg-gray-700 rounded-md px-2 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Agents</a>
+            {% endif %}
           </div>
         </div>
       </div>

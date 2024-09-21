@@ -3,6 +3,7 @@
 {% block content %}
 <!-- Create a lead -->
 <!-- component -->
+{% if request.user.is_organiser %}
 <div class="bg-gray-100">
     <div class="top-0 left-0 w-full bg-white border-t border-gray-200">
         <div class="container mx-auto px-4 py-2 flex justify-between items-center">
@@ -16,6 +17,7 @@
         </div>
     </div>
 </div>
+{% endif %}
 <!-- component -->
 <ul role="list" class="mt-5 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
     {% for lead in leads %}
