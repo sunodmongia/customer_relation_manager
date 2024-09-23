@@ -16,7 +16,6 @@ from django.urls import reverse_lazy
 from django.conf import settings
 
 
-
 # CRUD: Create, Retrieve, Update, Delete.
 
 
@@ -38,7 +37,9 @@ class LeadListView(OrganiserLoginRequiredMixin, generic.ListView):
 
         # initial queryset of lead for the entire organisation
         if user.is_organiser:
-            queryset = Lead.objects.filter(organisation=user.userprofile)
+            queryset = Lead.objects.filter(
+                organisation=user.userprofile, agent__isnull=False
+            )
         else:
             queryset = Lead.objects.filter(organisation=user.agent.organisation)
             # filter for the agent that is logged in
@@ -46,7 +47,13 @@ class LeadListView(OrganiserLoginRequiredMixin, generic.ListView):
         return queryset
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        context = super(LeadListView, self).get_context_data(**kwargs)
+        if user.is_organiser:
+            queryset = Lead.objects.filter(
+                organisation=user.userprofile, agent__isnull=True
+            )
+            context.update({"unassigned_leads": queryset})
         context["title"] = "Lead List"
         return context
 
@@ -84,14 +91,18 @@ class LeadCreateView(OrganiserLoginRequiredMixin, generic.CreateView):
 
     def form_valid(self, form):
         # Automatically assign the organisation (assuming the logged-in user is an organiser)
-        form.instance.organisation = self.request.user.userprofile  # Ensure user has a UserProfile
+        form.instance.organisation = (
+            self.request.user.userprofile
+        )  # Ensure user has a UserProfile
 
         # Send email notification upon successful lead creation
         send_mail(
             subject="New Lead created",
             message=f"Lead created successfully for {form.cleaned_data['first_name']} {form.cleaned_data['last_name']}",
             from_email=settings.EMAIL_HOST_USER,  # Fetch email from settings instead of os.environ
-            recipient_list=[settings.EMAIL_HOST_USER], # Send email to the configured user
+            recipient_list=[
+                settings.EMAIL_HOST_USER
+            ],  # Send email to the configured user
         )
         return super().form_valid(form)
 
@@ -146,6 +157,7 @@ def logout_view(request):
     logout(request)
     return redirect("login")
 
+
 class AgentListView(OrganiserLoginRequiredMixin, generic.ListView):
     template_name = "agent_list.html"
 
@@ -172,15 +184,12 @@ class AgentCreateView(OrganiserLoginRequiredMixin, generic.CreateView):
         user.is_organiser = False
         user.set_password(f"{random.randint(1000000, 1000000000)}")
         user.save()
-        Agent.objects.create(
-            user=user,
-            organisation=self.request.user.userprofile
-        )
+        Agent.objects.create(user=user, organisation=self.request.user.userprofile)
         send_mail(
             from_email=settings.EMAIL_HOST_USER,
             recipient_list=[user.email],
             subject="You are invited as an agent",
-            message="You were added as an agent in CRM by wire. Please login to confirm that it's you"
+            message="You were added as an agent in CRM by wire. Please login to confirm that it's you",
         )
         # agent.organisation = self.request.user.userprofile
         # agent.save()
@@ -214,8 +223,8 @@ class AgentUpdateView(OrganiserLoginRequiredMixin, generic.UpdateView):
     form_class = AgentModelForm
 
     def get_queryset(self):
-        organsation = self.request.user.username
-        return Agent.objects.filter(organsation=organsation)
+        user_profile = UserProfile.objects.get(user=self.request.user)
+        return Agent.objects.filter(organisation=user_profile)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -235,6 +244,34 @@ class AgentDeleteView(OrganiserLoginRequiredMixin, generic.DeleteView):
 
     def get_success_url(self):
         return reverse("agent_list")
+
+
+class AssignAgentView(OrganiserLoginRequiredMixin, generic.FormView):
+    template_name = "assign_agent.html"
+    form_class = AgentAssignForm
+
+    def get_form_kwargs(self, **kwargs):
+        kwargs = super(AssignAgentView, self).get_form_kwargs(**kwargs)
+        kwargs.update({
+            "request": self.request
+        })
+        return kwargs
+
+    def get_success_url(self):
+        return reverse("lead_list")
+    
+    def form_valid(self, form):
+        agent = form.cleaned_data["agent"]
+        lead = Lead.objects.get(id=self.kwargs["pk"])
+        lead.agent = agent
+        lead.save()
+        return super(AssignAgentView, self).form_valid(form)
+
+class CategoryListView(OrganiserLoginRequiredMixin, generic.ListView):
+    template_name = "category_list.html"
+    
+
+
 
 
 """
