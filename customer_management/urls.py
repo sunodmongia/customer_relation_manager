@@ -26,6 +26,12 @@ urlpatterns = [
     path("<int:pk>/delete/", AgentDeleteView.as_view(), name="agent_delete"),
     path("register_agent/", AgentCreateView.as_view(), name="register_agent"),
 
+    # Category of leads and agents
+    path("categories/", CategoryListView.as_view(), name="category_list"),
+    path("categories/<int:pk>/", CategoryDetailView.as_view(), name="category_detail"),
+    path("lead/<int:pk>/category_update/", CategoryUpdateView.as_view(), name="category_detail_update"),
+
+
     # urls for login, logout and sign up
     path("login/", LoginView.as_view(), name="login"),
     path("logout/", views.logout_view, name="logout"),

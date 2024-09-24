@@ -252,14 +252,12 @@ class AssignAgentView(OrganiserLoginRequiredMixin, generic.FormView):
 
     def get_form_kwargs(self, **kwargs):
         kwargs = super(AssignAgentView, self).get_form_kwargs(**kwargs)
-        kwargs.update({
-            "request": self.request
-        })
+        kwargs.update({"request": self.request})
         return kwargs
 
     def get_success_url(self):
         return reverse("lead_list")
-    
+
     def form_valid(self, form):
         agent = form.cleaned_data["agent"]
         lead = Lead.objects.get(id=self.kwargs["pk"])
@@ -267,10 +265,75 @@ class AssignAgentView(OrganiserLoginRequiredMixin, generic.FormView):
         lead.save()
         return super(AssignAgentView, self).form_valid(form)
 
+
 class CategoryListView(OrganiserLoginRequiredMixin, generic.ListView):
     template_name = "category_list.html"
-    
+    context_object_name = "category_list"
 
+    def get_queryset(self):
+        user = self.request.user
+
+        # initial queryset of lead for the entire organisation
+        if user.is_organiser:
+            queryset = category.objects.filter(organisation=user.userprofile)
+        else:
+            queryset = category.objects.filter(organisation=user.agent.organisation)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super(CategoryListView, self).get_context_data(**kwargs)
+        user = self.request.user
+        if user.is_organiser:
+            queryset = Lead.objects.filter(organisation=user.userprofile)
+        else:
+            queryset = Lead.objects.filter(organisation=user.agent.organisation)
+
+        context.update(
+            {"unassigned_lead_count": queryset.filter(category__isnull=True).count()}
+        )
+        context["title"] = "Category List"
+        return context
+
+
+class CategoryDetailView(LoginRequiredMixin, generic.DetailView):
+    template_name = "category_detail.html"
+    context_object_name = "category_detail"
+
+    def get_queryset(self):
+        user = self.request.user
+
+        # initial queryset of lead for the entire organisation
+        if user.is_organiser:
+            queryset = category.objects.filter(organisation=user.userprofile)
+        else:
+            queryset = category.objects.filter(organisation=user.agent.organisation)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super(CategoryDetailView, self).get_context_data(**kwargs)
+        leads = self.get_object().leads.all()
+        context.update({"leads": leads})
+        context["title"] = "Category Details"
+        return context
+
+
+class CategoryUpdateView(LoginRequiredMixin, generic.UpdateView):
+    template_name = "category_update.html"
+    form_class = LeadCategoryModelForm  # Use the class, not the string
+
+    def get_queryset(self):
+        user = self.request.user
+
+        # Query filtering based on whether the user is an organiser or agent
+        if user.is_organiser:
+            queryset = category.objects.filter(organisation=user.userprofile)
+        else:
+            queryset = category.objects.filter(organisation=user.agent.organisation)
+            queryset = queryset.filter(agent__user=user)
+        return queryset
+
+    def get_success_url(self):
+        return reverse("lead_list")
 
 
 

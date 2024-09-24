@@ -11,14 +11,12 @@ class User(AbstractUser):
     is_agent = models.BooleanField(default=False)
 
 
+# A UserProfile model linked to the User model
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.user.username
-
-
-# A UserProfile model linked to the User model
 
 
 # Lead model representing the lead details, with organisation reference
@@ -33,7 +31,11 @@ class Lead(models.Model):
     agent = models.ForeignKey("Agent", null=True, blank=True, on_delete=models.SET_NULL)
 
     category = models.ForeignKey(
-        "category", on_delete=models.SET_NULL, null=True, blank=True
+        "category",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="leads",
     )
 
     def __str__(self):

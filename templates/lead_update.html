@@ -12,7 +12,7 @@
                     <a class="hover:no-underline hover:text-indigo-500 hover:text-border-500 flex-grow border-b-2 border-grey-500 py-2 text-lg px-1"
                         href="{% url 'lead_detail' lead.id %}">Details</a>
                     <a
-                        class="hover:no-underline hover:text-indigo-500 hover:text-border-500 flex-grow border-b-2 border-gray-300 py-2 text-lg px-1">Reviews</a>
+                        class="hover:no-underline hover:text-indigo-500 hover:text-border-500 flex-grow border-b-2 border-gray-300 py-2 text-lg px-1" href="{% url 'category_detail_update' lead.id %}">Category</a>
                     <a class="hover:no-underline hover:text-indigo-500 hover:text-border-500 flex-grow border-b-2 border-gray-300 py-2 text-lg px-1"
                         href="{% url 'lead_detail_update' lead.id %}">Update</a>
                 </div>
