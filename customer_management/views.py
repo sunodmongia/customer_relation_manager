@@ -275,9 +275,9 @@ class CategoryListView(OrganiserLoginRequiredMixin, generic.ListView):
 
         # initial queryset of lead for the entire organisation
         if user.is_organiser:
-            queryset = category.objects.filter(organisation=user.userprofile)
+            queryset = Category.objects.filter(organisation=user.userprofile)
         else:
-            queryset = category.objects.filter(organisation=user.agent.organisation)
+            queryset = Category.objects.filter(organisation=user.agent.organisation)
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -304,9 +304,9 @@ class CategoryDetailView(LoginRequiredMixin, generic.DetailView):
 
         # initial queryset of lead for the entire organisation
         if user.is_organiser:
-            queryset = category.objects.filter(organisation=user.userprofile)
+            queryset = Category.objects.filter(organisation=user.userprofile)
         else:
-            queryset = category.objects.filter(organisation=user.agent.organisation)
+            queryset = Category.objects.filter(organisation=user.agent.organisation)
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -319,16 +319,15 @@ class CategoryDetailView(LoginRequiredMixin, generic.DetailView):
 
 class CategoryUpdateView(LoginRequiredMixin, generic.UpdateView):
     template_name = "category_update.html"
-    form_class = LeadCategoryModelForm  # Use the class, not the string
+    form_class = LeadCategoryModelForm
 
     def get_queryset(self):
         user = self.request.user
-
-        # Query filtering based on whether the user is an organiser or agent
+    
         if user.is_organiser:
-            queryset = category.objects.filter(organisation=user.userprofile)
+            queryset = Category.objects.filter(organisation=user.userprofile)
         else:
-            queryset = category.objects.filter(organisation=user.agent.organisation)
+            queryset = Category.objects.filter(organisation=user.agent.organisation)
             queryset = queryset.filter(agent__user=user)
         return queryset
 

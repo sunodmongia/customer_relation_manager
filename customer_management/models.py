@@ -51,7 +51,7 @@ class Agent(models.Model):
         return self.user.email
 
 
-class category(models.Model):
+class Category(models.Model):
     name = models.CharField(max_length=20)
     organisation = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
 
