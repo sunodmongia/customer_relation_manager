@@ -6,8 +6,6 @@ from django.contrib.auth import views as auth_views
 from django.urls import path, include
 from .views import *
 from . import views
-from .category import *
-
 
 urlpatterns = [
     path("", HomeView.as_view(), name="home"),
