@@ -40,6 +40,9 @@ class Lead(models.Model):
     )
 
     description = models.TextField()
+    date_added = models.DateTimeField(auto_now_add=True)
+    phone_number = models.CharField(max_length=20)
+    email = models.EmailField()
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
@@ -47,10 +50,6 @@ class Lead(models.Model):
 
 # Agent model, linking agents to a specific organisation
 class Agent(models.Model):
-    first_name = models.CharField(max_length=20)
-    last_name = models.CharField(max_length=20)
-    username = models.CharField(max_length=20)
-    email = models.EmailField(max_length=20)
     description = models.TextField()
     # User references UserProfile, must be set during creation
     user = models.OneToOneField(User, on_delete=models.CASCADE)

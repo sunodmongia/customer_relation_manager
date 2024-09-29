@@ -31,6 +31,8 @@ class LeadModelForm(forms.ModelForm):
             "age",
             "agent",
             "category",
+            "phone_number",
+            "email",
             "description",
         )
 

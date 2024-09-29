@@ -10,7 +10,6 @@ from django.views import generic
 from .models import *
 from .forms import *
 from .mixin import *
-import os
 import random
 from django.urls import reverse_lazy
 from django.conf import settings
@@ -209,7 +208,7 @@ class AgentCreateView(LoginRequiredMixin, generic.CreateView):
             from_email=settings.EMAIL_HOST_USER,
             recipient_list=[user.email],
             subject="You are invited as an agent",
-            message="You were added as an agent in CRM by wire. Please login to confirm that it's you",
+            message="You were added as an agent in CRM by wire. Change your password and Please login to confirm that it's you",
         )
         # agent.organisation = self.request.user.userprofile
         # agent.save()
