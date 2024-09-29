@@ -11,15 +11,12 @@
                     <a class="hover:no-underline hover:text-indigo-500 hover:text-border-500 flex-grow border-b-2 border-grey-500 py-2 text-lg px-1"
                         href="{% url 'lead_detail' lead.id %}">Details</a>
                     <a class="hover:no-underline hover:text-indigo-500 hover:text-border-500 flex-grow border-b-2 border-gray-300 py-2 text-lg px-1"
-                        href="{% url 'category_detail_update' lead.id %}">Category</a>
-                    <a class="hover:no-underline hover:text-indigo-500 hover:text-border-500 flex-grow border-b-2 border-gray-300 py-2 text-lg px-1"
-                        href="{% url 'lead_detail_update' lead.id %}">Update</a>
+                    href="{% url 'lead_detail_update' lead.id %}">Update</a>
                 </div>
-                <p class="leading-relaxed mb-4">Fam locavore kickstarter distillery. Mixtape chillwave tumeric sriracha
-                    taximy chia microdosing tilde DIY. XOXO fam inxigo juiceramps cornhole raw denim forage brooklyn.
-                    Everyday carry +1 seitan poutine tumeric. Gastropub blue bottle austin listicle pour-over, neutra
-                    jean.
-                </p>
+                <div class="flex mb-3 mt-2">
+                    <span class="ml-auto text-gray-900">{{ lead.description }}</span>
+                </div>
+                <a href="{% url 'update_status' lead.id %}" class="btn btn-primary btn-sm">Update</a>
             </div>
             <img alt="ecommerce" class="rounded-full h-200 h-64 object-cover object-center rounded"
                 src="{% static 'profile/default_2.jpg' %}">

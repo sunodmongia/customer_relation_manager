@@ -8,15 +8,13 @@
                 <h2 class="text-sm title-font text-gray-500 tracking-widest">AGENT</h2>
                 <h1 class="text-gray-900 text-3xl title-font font-medium mb-auto">{{ agent.user.username }}</h1>
                 <div class="flex mb-4">
-                    <a class="hover:no-underline hover:text-indigo-500 hover:text-border-500 flex-grow border-b-2 border-grey-500 py-2 text-lg px-1">Details</a>
-                    <a class="hover:no-underline hover:text-indigo-500 hover:text-border-500 flex-grow border-b-2 border-gray-300 py-2 text-lg px-1">Reviews</a>
+                    <a class="hover:no-underline hover:text-indigo-500 hover:text-border-500 flex-grow border-b-2 border-grey-500 py-2 text-lg px-1" href="{% url 'agent_detail' agent.id %}">Details</a>
                     <a class="hover:no-underline hover:text-indigo-500 hover:text-border-500 flex-grow border-b-2 border-gray-300 py-2 text-lg px-1" href="{% url 'agent_detail_update' agent.id %}">Update</a>
                 </div>
-                <p class="leading-relaxed mb-4">Fam locavore kickstarter distillery. Mixtape chillwave tumeric sriracha
-                    taximy chia microdosing tilde DIY. XOXO fam inxigo juiceramps cornhole raw denim forage brooklyn.
-                    Everyday carry +1 seitan poutine tumeric. Gastropub blue bottle austin listicle pour-over, neutra
-                    jean.
+                <p class="leading-relaxed mb-4">
+                    {{ agent.description }}
                 </p>
+                <a href="{% url 'agent_update_status' object.id %}" class="btn btn-primary btn-sm">Update</a>
             </div>
             <img alt="ecommerce" class="rounded-full h-200 h-64 object-cover object-center rounded"
                 src="{% static 'profile/default_2.jpg' %}">

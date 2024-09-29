@@ -126,6 +126,25 @@ class LeadUpdateView(OrganiserLoginRequiredMixin, generic.UpdateView):
 
     def get_success_url(self):
         return reverse("lead_list")
+    
+
+class UpdateLeadStatusView(LoginRequiredMixin, generic.UpdateView):
+    template_name = "lead_status_update.html"
+    form_class = UpdatestatusForm
+
+    def get_queryset(self):
+        user = self.request.user
+        # initial queryset of lead for the entire organisation
+        return Lead.objects.filter(organisation=user.userprofile)
+
+    def get_success_url(self): 
+        return reverse("lead_detail", kwargs={"pk": self.object.pk})
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = f"Update for {self.object}"
+        return context
 
 
 class LeadDeleteView(OrganiserLoginRequiredMixin, generic.DeleteView):
@@ -160,6 +179,7 @@ def logout_view(request):
 
 class AgentListView(OrganiserLoginRequiredMixin, generic.ListView):
     template_name = "agent_list.html"
+    context_object_name = "agents"
 
     def get_queryset(self):
         organisation = self.request.user.userprofile
@@ -171,7 +191,7 @@ class AgentListView(OrganiserLoginRequiredMixin, generic.ListView):
         return context
 
 
-class AgentCreateView(OrganiserLoginRequiredMixin, generic.CreateView):
+class AgentCreateView(LoginRequiredMixin, generic.CreateView):
     template_name = "register_agent.html"
     form_class = AgentModelForm
 
@@ -246,6 +266,24 @@ class AgentDeleteView(OrganiserLoginRequiredMixin, generic.DeleteView):
         return reverse("agent_list")
 
 
+class UpdateAgentStatusView(LoginRequiredMixin, generic.UpdateView):
+    template_name = "agent_status_update.html"
+    form_class = UpdateAgentStatusForm
+
+    def get_queryset(self):
+        user = self.request.user
+        # initial queryset of lead for the entire organisation
+        return Agent.objects.filter(organisation=user.userprofile)
+
+    def get_success_url(self): 
+        return reverse("agent_detail", kwargs={"pk": self.object.pk})
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = f"Update for {self.object}"
+        return context
+
 class AssignAgentView(OrganiserLoginRequiredMixin, generic.FormView):
     template_name = "assign_agent.html"
     form_class = AgentAssignForm
@@ -319,7 +357,7 @@ class CategoryDetailView(LoginRequiredMixin, generic.DetailView):
 
 class CategoryUpdateView(LoginRequiredMixin, generic.UpdateView):
     template_name = "category_update.html"
-    form_class = LeadCategoryModelForm
+    form_class = LeadModelForm
 
     def get_queryset(self):
         user = self.request.user

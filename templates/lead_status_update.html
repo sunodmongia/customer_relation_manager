@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+{% load crispy_forms_tags %}
+{% load widget_tweaks %}
+{% load static %}
+<section class="text-gray-600 body-font overflow-hidden">
+    <div class="container px-5 py-24 mx-auto">
+        <div class="lg:w-4/5 mx-auto flex flex-wrap">
+            <div class="lg:w-1/2 w-full lg:pr-10 lg:py-6 mb-6 lg:mb-0">
+                <h2 class="text-sm title-font text-gray-500 tracking-widest">LEAD</h2>
+                <h1 class="text-gray-900 text-3xl title-font font-medium mb-auto">{{ lead.first_name }} {{ lead.last_name }}</h1>
+                <div class="flex mb-4">
+                    <a class="hover:no-underline hover:text-indigo-500 hover:text-border-500 flex-grow border-b-2 border-grey-500 py-2 text-lg px-1"
+                        href="{% url 'lead_detail' object.id %}">Details</a>
+                    <a class="hover:no-underline hover:text-indigo-500 hover:text-border-500 flex-grow border-b-2 border-gray-300 py-2 text-lg px-1"
+                        href="{% url 'lead_detail_update' object.id %}">Update</a>
+                </div>
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    <div class="mt-8 grid lg:grid-cols-2 gap-4 ">
+                        <label for="first_name" class="text-xl text-gray-700 block mb-2 font-medium sm:col-span-2">Description</label>
+                        <div>
+                            {% render_field form.description type='text' name='status' class+="w-500 h-200 rounded-md py-3 px-3 border text-sm outline-gray-800" %}
+                        </div>
+                        <div class="flex sm:col-span-2">
+                            <input type="submit" value="Submit" , class="mt-3 btn btn-primary btn-sm">
+                            <a href="{% url 'lead_detail' object.id %}" class="mt-3 ml-2 btn btn-danger btn-sm">
+                                Cancel
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <img alt="ecommerce" class="rounded-full h-200 h-64 object-cover object-center rounded"
+                src="{% static 'profile/default_2.jpg' %}">
+        </div>
+    </div>
+</section>
+
+{% endblock %}

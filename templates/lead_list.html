@@ -15,7 +15,7 @@
 </div>
 
 
-<ul role="list" class="mt-5 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+<ul role="list" class="mt-3 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
     {% csrf_token %}
     {% for lead in leads %}
     <li class="col-span-1 divide-y divide-gray-200 rounded-lg bg-white shadow">
@@ -40,7 +40,10 @@
                     <span
                         class="inline-flex flex-shrink-0 items-center rounded-full bg-green-50 px-1.5 py-0.5 text-xs font-medium text-red-600 ring-1 ring-inset ring-green-600/20">Lead</span>
                 </div>
-                <p class="mt-1 truncate text-sm text-gray-500">Lead Age: {{lead.age}}</p>
+                <p class="mt-1 truncate text-sm text-gray-500">
+                    Category: {{ lead.category }} <br>
+                    Lead Age: {{lead.age}}
+                </p>
             </div>
 
             <!-- <img class="h-10 w-10 flex-shrink-0 rounded-full bg-gray-300" src="https://qph.cf2.quoracdn.net/main-thumb-554097988-200-xietklpojlcioqxaqgcyykzfxblvoqrb.jpeg" alt=""> -->

@@ -8,7 +8,7 @@
     <form action="" method="POST">
         {% csrf_token %}
         <div class="mt-8 grid lg:grid-cols-2 gap-4 ">
-            <!-- <div> <label for="first_name" class="text-sm text-gray-700 block mb-1 font-medium">First Name</label>
+            <div> <label for="first_name" class="text-sm text-gray-700 block mb-1 font-medium">First Name</label>
                 {% render_field form.first_name type="text" name="first_name" id="name" class+="bg-gray-100 border border-gray-200 rounded py-1 px-3 block focus:ring-blue-500 focus:border-blue-500 text-gray-700 w-full" placeholder="First name"%}
             </div>
             <div> 
@@ -22,8 +22,16 @@
             <div> 
                 <label for="agent" class="text-sm text-gray-700 block mb-1 font-medium">Agent</label> 
                 {% render_field form.agent id="agent" name="agent" class+="bg-gray-100 border border-gray-200 rounded py-1 px-3 block focus:ring-blue-500 focus:border-blue-500 text-gray-700 w-full" %}
-            </div> -->
-            {{ form|crispy }}
+            </div>
+            <div> 
+                <label for="category" class="text-sm text-gray-700 block mb-1 font-medium">Category</label> 
+                {% render_field form.category id="category" name="category" class+="bg-gray-100 border border-gray-200 rounded py-1 px-3 block focus:ring-blue-500 focus:border-blue-500 text-gray-700 w-full" %}
+            </div>
+            <div class="sm:col-span-2"> 
+                <label for="category" class="text-sm text-gray-700 block mb-1 font-medium">Description</label> 
+                {% render_field form.description id="description" name="description" class+="bg-gray-100 border border-gray-200 rounded py-1 px-3 block focus:ring-blue-500 focus:border-blue-500 text-gray-700 w-100 h-200 py-3 px-3" %}
+            </div>
+        
             <div class="flex"> 
                 <input type="submit" value="Submit" ,
                         class="mt-3 btn btn-primary">

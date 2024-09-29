@@ -11,8 +11,7 @@
                 <div class="flex mb-4">
                     <a class="hover:no-underline hover:text-indigo-500 hover:text-border-500 flex-grow border-b-2 border-grey-500 py-2 text-lg px-1"
                         href="{% url 'lead_detail' lead.id %}">Details</a>
-                    <a
-                        class="hover:no-underline hover:text-indigo-500 hover:text-border-500 flex-grow border-b-2 border-gray-300 py-2 text-lg px-1" href="{% url 'category_detail_update' lead.id %}">Category</a>
+                        
                     <a class="hover:no-underline hover:text-indigo-500 hover:text-border-500 flex-grow border-b-2 border-gray-300 py-2 text-lg px-1"
                         href="{% url 'lead_detail_update' lead.id %}">Update</a>
                 </div>
@@ -42,7 +41,13 @@
                             <div class="mt-2">
                               {% render_field form.agent id="agent" name="agent" autocomplete="agent-name" class+="block w-100 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6" %}
                             </div>
-                          </div>
+                        </div>
+                        <div class="sm:col-span-4">
+                            <label for="country" class="block text-sm font-medium leading-6 text-gray-900">Agent</label>
+                            <div class="mt-2">
+                              {% render_field form.category id="category" name="category" autocomplete="category" class+="block w-100 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6" %}
+                            </div>
+                        </div>
                     </div>
                     <div class="flex">
                         <input type="submit" value="Update" ,
