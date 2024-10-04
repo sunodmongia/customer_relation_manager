@@ -48,6 +48,7 @@ class AgentModelForm(forms.ModelForm):
             "email",
         )
 
+
 class AgentAssignForm(forms.Form):
     agent = forms.ModelChoiceField(queryset=Agent.objects.none())
 
@@ -61,13 +62,10 @@ class AgentAssignForm(forms.Form):
 class UpdatestatusForm(forms.ModelForm):
     class Meta:
         model = Lead
-        fields = [
-            "description",
-        ]
+        fields = ("description",)
+
 
 class UpdateAgentStatusForm(forms.ModelForm):
     class Meta:
         model = Agent
-        fields = [
-            "description",
-        ]
+        fields = ("description",)

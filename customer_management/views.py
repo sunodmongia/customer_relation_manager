@@ -124,8 +124,8 @@ class LeadUpdateView(OrganiserLoginRequiredMixin, generic.UpdateView):
         return context
 
     def get_success_url(self):
-        return reverse("lead_list")
-    
+        return reverse("lead_detail", kwargs={"pk": self.object.pk})
+
 
 class UpdateLeadStatusView(LoginRequiredMixin, generic.UpdateView):
     template_name = "lead_status_update.html"
@@ -136,9 +136,8 @@ class UpdateLeadStatusView(LoginRequiredMixin, generic.UpdateView):
         # initial queryset of lead for the entire organisation
         return Lead.objects.filter(organisation=user.userprofile)
 
-    def get_success_url(self): 
+    def get_success_url(self):
         return reverse("lead_detail", kwargs={"pk": self.object.pk})
-
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -274,14 +273,14 @@ class UpdateAgentStatusView(LoginRequiredMixin, generic.UpdateView):
         # initial queryset of lead for the entire organisation
         return Agent.objects.filter(organisation=user.userprofile)
 
-    def get_success_url(self): 
+    def get_success_url(self):
         return reverse("agent_detail", kwargs={"pk": self.object.pk})
-
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["title"] = f"Update for {self.object}"
         return context
+
 
 class AssignAgentView(OrganiserLoginRequiredMixin, generic.FormView):
     template_name = "assign_agent.html"
@@ -326,7 +325,10 @@ class CategoryListView(OrganiserLoginRequiredMixin, generic.ListView):
             queryset = Lead.objects.filter(organisation=user.agent.organisation)
 
         context.update(
-            {"unassigned_lead_count": queryset.filter(category__isnull=True).count()}
+            {
+                "unassigned_lead_count": queryset.filter(category__isnull=True).count(),
+                "assigned_lead_count": queryset.filter(category__isnull=False).count(),
+            }
         )
         context["title"] = "Category List"
         return context
@@ -360,7 +362,7 @@ class CategoryUpdateView(LoginRequiredMixin, generic.UpdateView):
 
     def get_queryset(self):
         user = self.request.user
-    
+
         if user.is_organiser:
             queryset = Category.objects.filter(organisation=user.userprofile)
         else:
@@ -370,7 +372,6 @@ class CategoryUpdateView(LoginRequiredMixin, generic.UpdateView):
 
     def get_success_url(self):
         return reverse("lead_list")
-
 
 
 """

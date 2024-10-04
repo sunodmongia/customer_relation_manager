@@ -13,15 +13,18 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 import os
 import environ
+from dotenv import load_dotenv
 
-env = environ.ENV(
-    DEBUG=(bool, False)
-)
+env = environ.Env(DEBUG=(bool, False))
 
-environ.Env.read_env()
+load_dotenv()
+
+READ_DOT_ENV_FILE = env.bool("READ_DOT_ENV_FILE", default=False)
+if READ_DOT_ENV_FILE:
+    environ.Env.read_env()
+
 
 DEBUG = env("DEBUG")
-
 SECRET_KEY = env("SECRET_KEY")
 
 
@@ -40,11 +43,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
-
+    "whitenoise.runserver_nostatic",
     "customer_management.apps.CustomerManagementConfig",
-
-
     "widget_tweaks",
     "crispy_forms",
     "crispy_bootstrap5",
@@ -53,6 +53,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -87,8 +88,12 @@ WSGI_APPLICATION = "CRM_project.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": env("DB_NAME"),
+        "USER": env("DB_USER"),
+        "PASSWORD": env("DB_PASSWORD"),
+        "HOST": env("DB_HOST"),
+        "PORT": env("DB_PORT"),
     }
 }
 
@@ -135,6 +140,7 @@ STATIC_URL = "static/"
 
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = "static_root"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 AUTH_USER_MODEL = "customer_management.User"
 LOGIN_REDIRECT_URL = "/home"
@@ -152,6 +158,3 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = os.environ.get("WIRE_APP_EMAIL_USER")
 EMAIL_HOST_PASSWORD = os.environ.get("WIRE_APP_EMAIL_PASSWORD")
-
-
-
