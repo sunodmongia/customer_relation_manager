@@ -17,7 +17,6 @@ from django.conf import settings
 
 # CRUD: Create, Retrieve, Update, Delete.
 
-
 class HomeView(generic.TemplateView):
     template_name = "home.html"
 

@@ -64,7 +64,6 @@ class Category(models.Model):
     organisation = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
 
 
-
 # Signal to create a UserProfile whenever a User is created
 @receiver(post_save, sender=User)
 def post_user_created_signal(sender, instance, created, **kwargs):
